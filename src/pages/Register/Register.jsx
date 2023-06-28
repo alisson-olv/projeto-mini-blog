@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './Register.module.css';
 import { useAuthentication } from '../../hooks/useAuthentication';
 
@@ -28,6 +28,14 @@ const Register = () => {
     const res = await createUser(user);
   };
 
+  useEffect(() => {
+
+    if (authError) {
+      setError(authError);
+    }
+
+  }, [authError]);
+
   return (
     <div className={styles.register}>
       <h1>
@@ -36,7 +44,7 @@ const Register = () => {
       <p>
         Crie seu usuário e compartilhe suas histórias
       </p>
-      <form onClick={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <label>
           <span>Nome:</span>
           <input
@@ -81,7 +89,8 @@ const Register = () => {
             onChange={(event) => setConfirmPassword(event.target.value)}
           />
         </label>
-        <button className='btn'>Cadastrar</button>
+        {!loading && <button className='btn'>Cadastrar</button>}
+        {loading && <button className='btn' disabled>Aguarde...</button>}
         {error && <p className='error'>{error}</p>}
       </form>
     </div>
